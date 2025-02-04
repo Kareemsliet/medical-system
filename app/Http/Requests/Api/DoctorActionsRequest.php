@@ -4,7 +4,7 @@ namespace App\Http\Requests\Api;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class AuthRequest extends FormRequest
+class DoctorActionsRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -21,9 +21,11 @@ class AuthRequest extends FormRequest
      */
     public function rules(): array
     {
+        $id=$this->route('action',0);
+
         return [
-            "email"=>"required|string|email",
-            "password"=>"string|required|min:8|string",
+            "name"=>"required|string|max:100|unique:doctor_actions,name,$id",
+            'price'=>"required|numeric",
         ];
     }
 

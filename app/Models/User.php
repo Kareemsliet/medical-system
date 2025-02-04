@@ -3,6 +3,8 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Attribute;
+use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -20,7 +22,6 @@ class User extends Authenticatable
      * @var list<string>
      */
     protected $fillable = [
-        'name',
         'email',
         'password',
     ];
@@ -46,6 +47,12 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
-    
 
+    public function doctor(){
+        return $this->hasOne(Doctor::class,'user_id');
+    }
+
+    public function scopeIsRole(Builder $builder,string $role){
+       $builder->has("$role")->exists();
+    }
 }

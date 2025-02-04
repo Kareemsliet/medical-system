@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\HasRole;
 use App\Http\Middleware\UserRoles;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
@@ -15,10 +16,14 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->api(prepend: [
             \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
+            \Illuminate\Routing\Middleware\SubstituteBindings::class,
         ]);
+
+        $middleware->statefulApi();
 
         $middleware->alias([
            'autoPermission'=>UserRoles::class,
+           'hasRole'=>HasRole::class,
         ]);
 
     })
