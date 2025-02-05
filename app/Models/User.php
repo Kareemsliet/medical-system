@@ -52,7 +52,8 @@ class User extends Authenticatable
         return $this->hasOne(Doctor::class,'user_id');
     }
 
-    public function scopeIsRole(Builder $builder,string $role){
-       $builder->has("$role")->exists();
+    public function isRole($role){
+        return $this->has("$role")->first();
     }
+
 }

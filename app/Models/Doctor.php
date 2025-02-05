@@ -3,10 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Doctor extends Model
 {
-    protected $fillable = ['name', 'first_phone', 'second_phone', 'image', 'commission', 'status', 'personal_id', 'signature', 'user_id'];  
+    use SoftDeletes;
+    protected $fillable = ['name','company_id','first_phone', 'second_phone', 'image', 'commission', 'status', 'personal_id', 'signature', 'user_id'];  
 
     protected $table='doctors';
 
@@ -27,4 +29,9 @@ class Doctor extends Model
     public function actions(){
         return $this->hasMany(DoctorAction::class,'doctor_id');
     }
+
+    public function company(){
+        return $this->belongsTo(Company::class);
+    }
+
 }

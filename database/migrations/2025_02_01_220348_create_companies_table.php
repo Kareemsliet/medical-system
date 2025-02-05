@@ -11,12 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('doctor_actions', function (Blueprint $table) {
+        Schema::create('companies', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('doctor_id')->unsigned();
-            $table->foreign('doctor_id')->references('id')->on('doctors')->onDelete('restrict')->onUpdate('restrict');
-            $table->string('name');
-            $table->decimal('price')->default(0);
+            $table->string("name");
+            $table->string("url")->nullable();
+            $table->string("name_manager")->nullable();
+            $table->string("phone_manager")->nullable();
             $table->softDeletes();
             $table->timestamps();
         });
@@ -27,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('doctor_actions');
+        Schema::dropIfExists('companies');
     }
 };

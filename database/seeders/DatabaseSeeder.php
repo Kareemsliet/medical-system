@@ -17,6 +17,9 @@ class DatabaseSeeder extends Seeder
            RolesTableSeeder::class,
            PermissionsRoles::class,
            UserTestSeeder::class,
+           PlansTableSeeder::class,
+           PlanFeaturesSeeder::class,
+           CompanySubscriptionSeeder::class,
         ]);
     }
 }

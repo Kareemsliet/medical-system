@@ -18,9 +18,17 @@ class AuthController extends Controller
         $user = User::where('email', '=', $request->email)->first();
 
         if (Hash::check($request->password, $user->password)) {
+        
+            if($user->tokens()->count('id') > 0){
+                $user->tokens()->delete();
+            }
+        
             $token = $user->createToken("user")->plainTextToken;
+        
             return successResponse("تم التسجيل الدخول بنجاح", ["token" => $token,'role'=>$user->roles()->first()->name]);
+        
         }
+
 
         return failResponse("لا يوجد بيانات  بهذه البانات");
 
