@@ -18,5 +18,10 @@ class Company extends Model
     public function clinics(){
         return $this->hasMany(Clinic::class);
     }
+
+    public function users(){
+        return $this->hasMany(User::class);
+    }
+
 }
 

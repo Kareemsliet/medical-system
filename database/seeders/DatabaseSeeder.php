@@ -16,10 +16,11 @@ class DatabaseSeeder extends Seeder
            PermissionsTableSeeder::class,
            RolesTableSeeder::class,
            PermissionsRoles::class,
+           CompaniesTableSeeder::class,
            UserTestSeeder::class,
            PlansTableSeeder::class,
            PlanFeaturesSeeder::class,
-           CompanySubscriptionSeeder::class,
+           SubscriptionsTableSeeder::class,
         ]);
     }
 }

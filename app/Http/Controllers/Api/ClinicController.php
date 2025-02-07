@@ -2,37 +2,31 @@
 
 namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Api\ClinicRequest;
 use App\Models\Clinic;
-use Illuminate\Http\Request;
 
 class ClinicController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
+     public $company;
+    public function __construct(){
+        $this->company=auth('sanctum')->user()->company;
+    }
     public function index()
     {
         $clinics = Clinic::all();
-        
         return successResponse(data:$clinics);
     }
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(ClinicRequest $request)
     {
-        $validation=validator()->make($request->only(['name','status']),[
-            'name'=>"required|string|unique:clinics,name",
-            "status"=> "required|string|in:0,1",
-        ]);
+        $data=$request->validated();
 
-        $validation->validated();
-
-        if($validation->fails()){
-            return failResponse($validation->errors()->first());
-        }
-
-        $clinic= Clinic::create($request->only(['name','status']));
+        $clinic=$this->company->clinics()->create($data);
 
         return successResponse("تم اضافة عنصر بنجاح",$clinic);
     }
@@ -54,18 +48,9 @@ class ClinicController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(ClinicRequest $request, string $id)
     {   
-        $validation=validator()->make($request->only(['name','status']),[
-            'name'=>"required|string|unique:clinics,name",
-            "status"=> "required|string|in:0,1",
-        ]);
-
-        $validation->validated();
-
-        if($validation->fails()){
-            return failResponse($validation->errors()->first());
-        }
+        $data=$request->validated();
 
         $clinic= Clinic::find($id);
 
@@ -73,7 +58,7 @@ class ClinicController extends Controller
             return failResponse("لا يوجد عنصر بهذا id");
         }
 
-        $clinic->update($request->only(['name','status']));
+       $clinic->update($data);
 
         return successResponse("تم تعديل عنصر بنجاح",$clinic);
     }

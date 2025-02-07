@@ -94,6 +94,31 @@ class PermissionsTableSeeder extends Seeder
                 'guard_name'=>"web",
                 'routes'=>"profile.update",
             ],
+            [
+                'name'=>'edit-user',
+                'guard_name'=>"web",
+                'routes'=>"users.update",
+            ],
+            [
+                'name'=>'insert-user',
+                'guard_name'=>"web",
+                'routes'=>"users.store",
+            ],
+            [
+                'name'=>'all-users',
+                'guard_name'=>"web",
+                'routes'=>"users.insex",
+            ],
+            [
+                'name'=>'show-user',
+                'guard_name'=>"web",
+                'routes'=>"users.show",
+            ],
+            [
+                'name'=>'delete-user',
+                'guard_name'=>"web",
+                'routes'=>"users.destroy",
+            ],
         ]);
     }
 }

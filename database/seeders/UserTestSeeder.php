@@ -15,16 +15,19 @@ class UserTestSeeder extends Seeder
         $adminUser=User::create([
             'email'=>"admin@gmail.com",
             "password"=>bcrypt("admin@345"),
+            "company_id"=>1,
         ]);
 
         $EmployeeUser=User::create([
             'email'=>"employee@gmail.com",
             "password"=>bcrypt("admin@345"),
+            "company_id"=>1,
         ]);
 
         $doctorUser=User::create([
             'email'=>"doctor@gmail.com",
             "password"=>bcrypt("doctor@345"),
+            "company_id"=>3,
         ]);
 
         $adminUser->assignRole('admin');

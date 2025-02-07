@@ -4,7 +4,7 @@ namespace App\Http\Requests\Api;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class AuthRequest extends FormRequest
+class UsersRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -21,13 +21,16 @@ class AuthRequest extends FormRequest
      */
     public function rules(): array
     {
+        $id=$this->route("user",0);
         return [
-            "email"=>"required|string|email",
-            "password"=>"string|required|string",
+            "email"=>"required|string|unique:users,email,$id",
+            "password"=>"required|string",
+            "role_id"=>"required|exists:roles,id",
         ];
     }
 
     public function failedValidation(\Illuminate\Contracts\Validation\Validator $validator){
         return failResponse($validator->errors()->first());
     }
+
 }

@@ -8,14 +8,15 @@ return new class extends Migration
 {
     /**
      * Run the migrations.
-    */
-    
+     */
     public function up(): void
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->string('email');
             $table->string('password');
+            $table->bigInteger('company_id')->unsigned()->nullable();
+            $table->foreign('company_id')->references('id')->on('companies')->onDelete('restrict')->onUpdate('restrict');
             $table->rememberToken();
             $table->timestamps();
         });

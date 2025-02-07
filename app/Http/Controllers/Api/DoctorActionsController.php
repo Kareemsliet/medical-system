@@ -12,13 +12,12 @@ class DoctorActionsController extends Controller
     public $user;
     private $imageService;
     public function __construct(){
-        
+
         $this->user=auth('sanctum')->user();
 
         $this->imageService=new ImageService();
-
+        
     }
-
     /**
      * Display a listing of the resource.
      */

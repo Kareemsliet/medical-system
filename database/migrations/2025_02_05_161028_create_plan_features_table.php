@@ -12,7 +12,6 @@ return new class extends Migration
     {
         Schema::create(config('laravel-subscriptions.tables.features'), function (Blueprint $table): void {
             $table->id();
-
             $table->foreignIdFor(config('laravel-subscriptions.models.plan'));
             $table->json('name');
             $table->string('slug')->unique();
@@ -20,6 +19,7 @@ return new class extends Migration
             $table->string('value');
             $table->unsignedSmallInteger('resettable_period')->default(0);
             $table->string('resettable_interval')->default('month');
+            $table->string("routes")->nullable();
             $table->unsignedMediumInteger('sort_order')->default(0);
 
             $table->timestamps();

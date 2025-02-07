@@ -23,8 +23,6 @@ return new class extends Migration
             $table->string('signature')->nullable();
             $table->bigInteger('user_id')->unsigned();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('restrict')->onUpdate('restrict');
-            $table->bigInteger('company_id')->unsigned()->nullable();
-            $table->foreign('company_id')->references('id')->on('companies')->onDelete('restrict')->onUpdate('restrict');
             $table->softDeletes();
             $table->timestamps();
         });

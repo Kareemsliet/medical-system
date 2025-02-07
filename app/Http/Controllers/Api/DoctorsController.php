@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Http\Controllers\Api;
-
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\DoctorRequest;
 use App\Http\Services\ImageService;
@@ -11,9 +10,11 @@ use App\Models\User;
 class DoctorsController extends Controller
 {
     private $imageService;
-
+    private $company;
     public function __construct(){
-        $this->imageService = new ImageService();
+        $this->imageService = new ImageService();   
+        
+        $this->company=auth('sanctum')->user()->company;
     }
     /**
      * Display a listing of the resource.
@@ -32,21 +33,19 @@ class DoctorsController extends Controller
     {
         $request->validated();
 
-        $data = $request->only(['name', 'first_phone', 'second_phone', 'image', 'commission', 'status', 'personal_id']);
+        $data = $request->only(['name','first_phone','second_phone', 'image', 'commission', 'status', 'personal_id','user_id']);
 
-        if ($request->file("image")) {
+        if($request->file("image")) {
             $image = $this->imageService->uploadImage($request->file('image'),"doctors");
             $data['image'] = $image;
         }
 
-        if ($request->file("signature")) {
+        if($request->file("signature")) {
             $signature = $this->imageService->uploadImage($request->file('signature'), "doctors");
             $data['signature'] = $signature;
         }
 
-        $user = User::find($request->user_id);
-
-        $doctor = $user->doctor()->create($data);
+        $doctor = $this->company->doctors()->create($data);
 
         return successResponse(data: $doctor);
     }
@@ -78,7 +77,7 @@ class DoctorsController extends Controller
             return failResponse(message: "Doctor not found");
         }
 
-        $data = $request->only(['name', 'first_phone', 'second_phone','commission', 'status', 'personal_id','user_id']);
+        $data = $request->only(['name','first_phone',"user_id",'second_phone', 'image', 'commission', 'status', 'personal_id']);
 
         if ($request->file("image")) {
             if ($doctor->image) {
