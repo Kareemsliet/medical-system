@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\UsersRequest;
+use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
@@ -11,7 +12,6 @@ class UsersController extends Controller
 {
 
     public $company;
-
     public function __construct(){
         $this->company=auth('sanctum')->user()->company;
     }
@@ -23,7 +23,7 @@ class UsersController extends Controller
     {
         $users=User::all();
 
-        return successResponse(data:$users);
+        return successResponse(data:UserResource::collection($users));
     }
 
     /**
@@ -39,7 +39,7 @@ class UsersController extends Controller
 
         $user->syncRoles([$role]);
 
-        return successResponse(data:$user);
+        return successResponse("Successfully Storage Done!",data:new UserResource($user));
     }
 
     /**
@@ -53,7 +53,7 @@ class UsersController extends Controller
             return failResponse("Not Found Data");
         }
 
-        return successResponse(data:$user);
+        return successResponse(data:new UserResource($user));
     }
 
     /**
@@ -75,7 +75,7 @@ class UsersController extends Controller
         
         $user->syncRoles([$role]);
 
-        return successResponse(data:$user);
+        return successResponse("Successfully Updated",data:new UserResource($user));
     }
 
     /**
@@ -89,6 +89,10 @@ class UsersController extends Controller
             return failResponse("Not Found Data");
         }
 
+        if($user->doctor){
+            $user->doctor->delete();
+        }
+        
         $user->delete();
 
         return successResponse("Done Successfully deleted");

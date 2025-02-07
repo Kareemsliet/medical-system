@@ -19,18 +19,5 @@ class CompaniesTableSeeder extends Seeder
             "name_manager"=>"Eng.Eslam Elgohry",
             "phone_manager"=>"01066201102",
         ]);
-
-        Company::create([
-            'name'=>"Al AlMohamedy",
-            "name_manager"=>"Eng.Kareem",
-            "phone_manager"=>"010690201102",
-        ]);
-
-        Company::create([
-            'name'=>"Al Zahraa",
-            "name_manager"=>"Eng.mohaemd",
-            "phone_manager"=>"010778201102",
-        ]);
-
     }
 }

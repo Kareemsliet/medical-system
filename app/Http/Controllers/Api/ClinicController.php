@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\ClinicRequest;
+use App\Http\Resources\ClinicResource;
 use App\Models\Clinic;
 
 class ClinicController extends Controller
@@ -17,7 +18,7 @@ class ClinicController extends Controller
     public function index()
     {
         $clinics = Clinic::all();
-        return successResponse(data:$clinics);
+        return successResponse(data:ClinicResource::collection($clinics));
     }
     /**
      * Store a newly created resource in storage.
@@ -28,7 +29,7 @@ class ClinicController extends Controller
 
         $clinic=$this->company->clinics()->create($data);
 
-        return successResponse("تم اضافة عنصر بنجاح",$clinic);
+        return successResponse("تم اضافة عنصر بنجاح",new ClinicResource($clinic));
     }
 
     /**
@@ -42,7 +43,7 @@ class ClinicController extends Controller
             return failResponse("لا يوجد عنصر بهذا id");
         }
 
-        return successResponse(data:$clinic);
+        return successResponse(data:new ClinicResource($clinic));
     }
 
     /**
@@ -60,7 +61,7 @@ class ClinicController extends Controller
 
        $clinic->update($data);
 
-        return successResponse("تم تعديل عنصر بنجاح",$clinic);
+        return successResponse("تم تعديل عنصر بنجاح",new ClinicResource($clinic));
     }
 
     /**

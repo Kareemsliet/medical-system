@@ -27,7 +27,7 @@ class UserTestSeeder extends Seeder
         $doctorUser=User::create([
             'email'=>"doctor@gmail.com",
             "password"=>bcrypt("doctor@345"),
-            "company_id"=>3,
+            "company_id"=>1,
         ]);
 
         $adminUser->assignRole('admin');

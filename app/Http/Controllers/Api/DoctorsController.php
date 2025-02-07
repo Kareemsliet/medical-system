@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\DoctorRequest;
+use App\Http\Resources\DoctorResource;
 use App\Http\Services\ImageService;
 use App\Models\Doctor;
 use App\Models\User;
@@ -10,11 +11,8 @@ use App\Models\User;
 class DoctorsController extends Controller
 {
     private $imageService;
-    private $company;
     public function __construct(){
         $this->imageService = new ImageService();   
-        
-        $this->company=auth('sanctum')->user()->company;
     }
     /**
      * Display a listing of the resource.
@@ -23,7 +21,7 @@ class DoctorsController extends Controller
     {
         $doctors = Doctor::all();
 
-        return successResponse(data: $doctors);
+        return successResponse(data:DoctorResource::collection($doctors));
     }
 
     /**
@@ -33,7 +31,7 @@ class DoctorsController extends Controller
     {
         $request->validated();
 
-        $data = $request->only(['name','first_phone','second_phone', 'image', 'commission', 'status', 'personal_id','user_id']);
+        $data = $request->only(['name','first_phone','second_phone', 'image', 'commission', 'status', 'personal_id']);
 
         if($request->file("image")) {
             $image = $this->imageService->uploadImage($request->file('image'),"doctors");
@@ -45,9 +43,11 @@ class DoctorsController extends Controller
             $data['signature'] = $signature;
         }
 
-        $doctor = $this->company->doctors()->create($data);
+        $user=User::find($request->input('user_id'));
 
-        return successResponse(data: $doctor);
+        $doctor = $user->doctor()->create($data);
+
+        return successResponse(data:new DoctorResource($doctor));
     }
 
     /**
@@ -61,7 +61,7 @@ class DoctorsController extends Controller
             return failResponse(message: "Doctor not found");
         }
 
-        return successResponse(data: $doctor);
+        return successResponse(data:new DoctorResource($doctor));
     }
 
     /**
@@ -97,7 +97,7 @@ class DoctorsController extends Controller
 
         $doctor->update($data);
 
-        return successResponse(message: "Doctor updated successfully", data: $doctor);
+        return successResponse(message: "Doctor updated successfully", data:new DoctorResource(($doctor)));
     }
 
     /**

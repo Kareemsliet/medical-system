@@ -12,9 +12,6 @@ class Company extends Model
 {
     use SoftDeletes,HasPlanSubscriptions;
     protected $fillable=["name","url","name_manager","phone_manager"];
-    public function doctors(){
-        return $this->hasMany(Doctor::class);
-    } 
     public function clinics(){
         return $this->hasMany(Clinic::class);
     }
