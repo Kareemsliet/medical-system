@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Http\Services\ImageService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -19,12 +20,12 @@ class DoctorResource extends JsonResource
         return [
             "id"=> $this->id,
             "name"=> $this->name,
-            "image"=>$this->image?Storage::url("doctors/$this->image"):"",
-            "signature"=>$this->image?Storage::url("doctors/$this->signature"):"",
+            "image"=>$this->image?(new ImageService)->imageUrlToBase64(Storage::url("doctors/$this->image")):"",
+            "signature"=>$this->image?( new ImageService)->imageUrlToBase64(Storage::url("doctors/$this->signature")):"",
             "scond_phone"=>$this->second_phone,
             "commission"=>$this->commission."%",
             "first_phone"=>$this->first_phone,
-            "company"=>new CompanyResource($this->company),
+            "user"=>new UserResource($this->user),
             "status"=> $this->status,
             "personal_id"=> $this->personal_id,
             "created_at"=>$this->created_at,

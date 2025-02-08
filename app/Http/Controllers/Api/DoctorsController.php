@@ -5,6 +5,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\DoctorRequest;
 use App\Http\Resources\DoctorResource;
 use App\Http\Services\ImageService;
+use App\Http\Services\UserService;
 use App\Models\Doctor;
 use App\Models\User;
 
@@ -31,7 +32,9 @@ class DoctorsController extends Controller
     {
         $request->validated();
 
-        $data = $request->only(['name','first_phone','second_phone', 'image', 'commission', 'status', 'personal_id']);
+        $data = $request->only(['name','first_phone','second_phone','commission', 'status', 'personal_id']);
+
+        $user=(new UserService())->store($request->only(['email','password']),"doctor");
 
         if($request->file("image")) {
             $image = $this->imageService->uploadImage($request->file('image'),"doctors");
@@ -42,8 +45,6 @@ class DoctorsController extends Controller
             $signature = $this->imageService->uploadImage($request->file('signature'), "doctors");
             $data['signature'] = $signature;
         }
-
-        $user=User::find($request->input('user_id'));
 
         $doctor = $user->doctor()->create($data);
 
@@ -77,7 +78,7 @@ class DoctorsController extends Controller
             return failResponse(message: "Doctor not found");
         }
 
-        $data = $request->only(['name','first_phone',"user_id",'second_phone', 'image', 'commission', 'status', 'personal_id']);
+        $data = $request->only(['name','first_phone','second_phone','commission', 'status', 'personal_id']);
 
         if ($request->file("image")) {
             if ($doctor->image) {
@@ -97,6 +98,8 @@ class DoctorsController extends Controller
 
         $doctor->update($data);
 
+        $doctor->user->update($request->only(['email','password']));
+
         return successResponse(message: "Doctor updated successfully", data:new DoctorResource(($doctor)));
     }
 
@@ -111,13 +114,7 @@ class DoctorsController extends Controller
             return failResponse(message:"Doctor not found");
         }
 
-        if($doctor->image){
-            $this->imageService->destroyImage($doctor->image, "doctors");
-        }
-
-        if($doctor->signature){
-            $this->imageService->destroyImage($doctor->signature, "doctors");
-        }
+        $doctor->user->delete();
 
         $doctor->delete();
 

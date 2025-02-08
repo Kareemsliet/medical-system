@@ -15,6 +15,10 @@ class RolesTableSeeder extends Seeder
     {
         Role::insert([
             [
+                "name"=>"system_manager",
+                "guard_name"=>"web",
+            ],
+            [
                 "name"=> "admin",
                 "guard_name"=>"web",
             ],

@@ -4,7 +4,7 @@ namespace App\Http\Requests\Api;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class DoctorRequest extends FormRequest
+class EmployeeRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,22 +24,25 @@ class DoctorRequest extends FormRequest
        $id=$this->route('doctor',0);
        return [
             "name" => "required|string|max:100",
-            "first_phone" => "required|max:20|unique:doctors,first_phone,$id",
-            "second_phone" => "nullable|max:20|unique:doctors,second_phone,$id",
+            "first_phone" => "required|max:20|unique:employees,first_phone,$id",
+            "second_phone" => "nullable|max:20|unique:employees,second_phone,$id",
             "image" => $this->whenHas('image',function(){
                 return "image|max:15000|mimes:png,jpg,jpeg";
             },function(){
                 return "nullable";
             }),
-            "commission" => "required|numeric",
-            "personal_id" => "required|max:20|unique:doctors,personal_id,$id",
+            "personal_id" => "required|max:20|unique:employees,personal_id,$id",
             "status" => "required|in:0,1",
-            "signture" => $this->whenHas('image',function(){
+            "personal_image" => $this->whenHas('personal_image',function(){
                 return "image|max:15000|mimes:png,jpg,jpeg";
             },function(){
                 return "nullable";
             }),
+            "jop"=>"string|required",
+            "grander"=>"required|in:male,female",
             "email"=>"required|email|string",
+            "salary"=>"required|numeric",
+            "role"=>"required||in:admin,employee",
             "password"=>"required|string|min:8",
         ];
     }

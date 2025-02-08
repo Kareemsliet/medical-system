@@ -18,6 +18,7 @@ class ClinicController extends Controller
     public function index()
     {
         $clinics = Clinic::all();
+     
         return successResponse(data:ClinicResource::collection($clinics));
     }
     /**

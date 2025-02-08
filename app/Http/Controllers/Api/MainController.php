@@ -15,7 +15,7 @@ class MainController extends Controller
     }
 
     public function roles(){
-        $roles=Role::all();
+        $roles=Role::whereIn('name',['doctor','admin','employee','patient'])->get();
         return successResponse(data:$roles);
     }
 

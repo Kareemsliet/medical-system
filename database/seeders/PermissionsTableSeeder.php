@@ -119,6 +119,82 @@ class PermissionsTableSeeder extends Seeder
                 'guard_name'=>"web",
                 'routes'=>"users.destroy",
             ],
+            [
+                'name'=>'all-patients',
+                'guard_name'=>"web",
+                'routes'=>"patients.insex",
+            ],
+            [
+                'name'=>'delete-patient',
+                'guard_name'=>"web",
+                'routes'=>"patients.destroy",
+            ],
+            [
+                'name'=>'show-patient',
+                'guard_name'=>"web",
+                'routes'=>"patients.show",
+            ],
+            [
+                'name'=>'insert-patient',
+                'guard_name'=>"web",
+                'routes'=>"patients.store",
+            ],
+            [
+                'name'=>'edit-patient',
+                'guard_name'=>"web",
+                'routes'=>"patients.update",
+            ],
+            [
+                'name'=>'edit-employee',
+                'guard_name'=>"web",
+                'routes'=>"employees.update",
+            ],
+            [
+                'name'=>'insert-employee',
+                'guard_name'=>"web",
+                'routes'=>"employees.store",
+            ],
+            [
+                'name'=>'delete-employee',
+                'guard_name'=>"web",
+                'routes'=>"employees.destroy",
+            ],
+            [
+                'name'=>'show-employee',
+                'guard_name'=>"web",
+                'routes'=>"employees.show",
+            ],
+            [
+                'name'=>'all-employees',
+                'guard_name'=>"web",
+                'routes'=>"employees.update",
+            ],
+            [
+                'name'=>'edit-company',
+                'guard_name'=>"web",
+                'routes'=>"companies.update",
+            ],
+            [
+                'name'=>'insert-company',
+                'guard_name'=>"web",
+                'routes'=>"companies.store",
+            ],
+            [
+                'name'=>'delete-company',
+                'guard_name'=>"web",
+                'routes'=>"companies.destroy",
+            ],
+            [
+                'name'=>'show-company',
+                'guard_name'=>"web",
+                'routes'=>"companies.show",
+            ],
+            [
+                'name'=>'all-companies',
+                'guard_name'=>"web",
+                'routes'=>"companies.update",
+            ],
+
         ]);
     }
 }

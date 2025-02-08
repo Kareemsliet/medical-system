@@ -15,9 +15,10 @@ return new class extends Migration
             $table->id();
             $table->string('email');
             $table->string('password');
-            $table->bigInteger('company_id')->unsigned()->nullable();
+            $table->bigInteger('company_id')->unsigned();
             $table->foreign('company_id')->references('id')->on('companies')->onDelete('restrict')->onUpdate('restrict');
             $table->rememberToken();
+            $table->softDeletes();
             $table->timestamps();
         });
         Schema::create('cache', function (Blueprint $table) {

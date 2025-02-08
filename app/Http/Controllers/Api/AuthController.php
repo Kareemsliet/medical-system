@@ -26,8 +26,8 @@ class AuthController extends Controller
         if ($user->tokens()->count('id') > 0) {
             $user->tokens()->delete();
         }
-
-        $token = $user->createToken("user")->plainTextToken;
+        
+        $token = $user->createToken(name:"user",expiresAt:now()->addDays(2))->plainTextToken;
 
         return successResponse("تم التسجيل الدخول بنجاح", ["token" => $token, 'role' => $user->roles()->first()->name]);
     }

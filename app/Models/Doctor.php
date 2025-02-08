@@ -29,9 +29,4 @@ class Doctor extends Model
     public function actions(){
         return $this->hasMany(DoctorAction::class,'doctor_id');
     }
-
-    public function company(){
-        return $this->belongsTo(Company::class);
-    }
-
 }

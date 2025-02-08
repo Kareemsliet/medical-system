@@ -3,9 +3,8 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Attribute;
-use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -14,7 +13,7 @@ use Spatie\Permission\Traits\HasRoles;
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable,HasApiTokens,HasRoles;
+    use HasFactory, Notifiable,HasApiTokens,HasRoles,SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -48,15 +47,21 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
-
     public function doctor(){
         return $this->hasOne(Doctor::class,'user_id');
+    }
+
+    public function patient(){
+        return $this->hasOne(Patient::class,'user_id');
+    }
+
+    public function employee(){
+        return $this->hasOne(Employee::class,'user_id');
     }
 
     public function isRole($role){
         return $this->has("$role")->first();
     }
-
     public function company(){
         return $this->belongsTo(Company::class);
     }

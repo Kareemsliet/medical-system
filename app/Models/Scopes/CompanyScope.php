@@ -13,6 +13,6 @@ class CompanyScope implements Scope
      */
     public function apply(Builder $builder, Model $model): void
     {
-        $builder->withCount(['clinics','users'])->orderByDesc('created_at');
+        $builder->withCount(['clinics'])->orderByDesc('created_at');
     }
 }

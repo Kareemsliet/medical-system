@@ -1,0 +1,123 @@
+<?php
+
+namespace App\Http\Controllers\Api;
+
+use App\Http\Controllers\Controller;
+use App\Http\Requests\Api\EmployeeRequest;
+use App\Http\Resources\EmployeeResource;
+use App\Http\Services\ImageService;
+use App\Http\Services\UserService;
+use App\Models\Employee;
+
+class EmployeesController extends Controller
+{
+    private $imageService;
+    public function __construct(){
+        $this->imageService = new ImageService();   
+    }
+    /**
+     * Display a listing of the resource.
+     */
+    public function index()
+    {
+        $employees = Employee::all();
+
+        return successResponse(data:EmployeeResource::collection($employees));
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(EmployeeRequest $request)
+    {
+        $request->validated();
+
+        $data = $request->only(['name','first_phone','second_phone','status',"grander",'personal_id','jop','salary']);
+
+        $user=(new UserService())->store($request->only(['email','password']),$request->role);
+
+        if($request->file("image")) {
+            $image = $this->imageService->uploadImage($request->file('image'),"employees");
+            $data['image'] = $image;
+        }
+
+        if($request->file("personal_image")) {
+            $personal_image = $this->imageService->uploadImage($request->file('personal_image'), "employees");
+            $data['personal_image'] = $personal_image;
+        }
+
+        $employee = $user->employee()->create($data);
+
+        return successResponse(data:new EmployeeResource($employee));
+    }
+
+    /**
+     * Display the specified resource.
+     */
+    public function show(string $id)
+    {
+        $employee = Employee::find($id);
+
+        if (!$employee) {
+            return failResponse(message: "Employee not found");
+        }
+
+        return successResponse(data:new EmployeeResource($employee));
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(EmployeeRequest $request, string $id)
+    {
+        $request->validated();
+
+        $employee = Employee::find($id);
+
+        if (!$employee) {
+            return failResponse(message: "Employee not found");
+        }
+
+        $data = $request->only(['name','first_phone','second_phone','status',"grander",'personal_id','jop','salary']);
+
+        if ($request->file("image")) {
+            if ($employee->image) {
+               $this->imageService->destroyImage($employee->image, "employees");
+            }
+            $image = $this->imageService->uploadImage($request->file("image"), "employees");
+            $data['image'] = $image;
+        }
+
+        if ($request->file("personal_image")) {
+            if ($employee->personal_image) {
+                $this->imageService->destroyImage($employee->personal_image, "employees");
+            }
+            $personal_image = $this->imageService->uploadImage($request->file("personal_image"), "employees");
+            $data["personal_image"] = $personal_image;
+        }
+
+        $employee->user->update($request->only(['email','password']));
+
+        $employee->update($data);
+
+        return successResponse(message: "Employee updated successfully", data:new EmployeeResource(($employee)));
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(string $id)
+    {
+        $employee = Employee::find($id);
+
+        if(!$employee){
+            return failResponse(message:"Employee not found");
+        }
+
+        $employee->user()->delete();
+
+        $employee->delete();
+
+        return successResponse(message:"Employee deleted successfully");
+    }
+}
