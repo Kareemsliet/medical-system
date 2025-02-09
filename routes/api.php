@@ -21,7 +21,7 @@ Route::get('/roles',[MainController::class,"roles"])->name("roles");
 
 Route::group(['middleware'=>['auth:sanctum',"autoPermission"]],function(){
     Route::post('/logout',[AuthController::class,"logout"])->name('logout');
-    Route::apiResource('/clinics',ClinicController::class)->withoutMiddlewareFor("store","th");
+    Route::apiResource('/clinics',ClinicController::class);
     Route::apiResource('/doctors',DoctorsController::class);
     Route::apiResource("/employees",EmployeesController::class);
     Route::apiResource("/patients",PatientsController::class);
@@ -30,3 +30,5 @@ Route::group(['middleware'=>['auth:sanctum',"autoPermission"]],function(){
         Route::post("/profile/update",[DoctorActionsController::class,"updateProfile"])->name("profile.update");
     });
 });
+
+Route::post('/password-update',[PatientsController::class,"updatePassword"])->name("patient.password.update");

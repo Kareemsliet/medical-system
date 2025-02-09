@@ -21,17 +21,17 @@ class EmployeeRequest extends FormRequest
      */
     public function rules(): array
     {
-       $id=$this->route('doctor',0);
+       $employee=$this->route('employee',0);
        return [
-            "name" => "required|string|max:100",
-            "first_phone" => "required|max:20|unique:employees,first_phone,$id",
-            "second_phone" => "nullable|max:20|unique:employees,second_phone,$id",
+            "name" => "required|string|max:100|unique:employees,name,$employee",
+            "first_phone" => "required|max:20|unique:employees,first_phone,$employee|unique:employees,second_phone,$employee",
+            "second_phone" => "nullable|max:20|unique:employees,second_phone,$employee|unique:employees,first_phone,$employee",
             "image" => $this->whenHas('image',function(){
                 return "image|max:15000|mimes:png,jpg,jpeg";
             },function(){
                 return "nullable";
             }),
-            "personal_id" => "required|max:20|unique:employees,personal_id,$id",
+            "personal_id" => "required|max:20|unique:employees,personal_id,$employee",
             "status" => "required|in:0,1",
             "personal_image" => $this->whenHas('personal_image',function(){
                 return "image|max:15000|mimes:png,jpg,jpeg";
@@ -42,7 +42,7 @@ class EmployeeRequest extends FormRequest
             "grander"=>"required|in:male,female",
             "email"=>"required|email|string",
             "salary"=>"required|numeric",
-            "role"=>"required||in:admin,employee",
+            "role"=>"required||in:admin,employee|string",
             "password"=>"required|string|min:8",
         ];
     }

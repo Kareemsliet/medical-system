@@ -95,34 +95,9 @@ class PermissionsTableSeeder extends Seeder
                 'routes'=>"profile.update",
             ],
             [
-                'name'=>'edit-user',
-                'guard_name'=>"web",
-                'routes'=>"users.update",
-            ],
-            [
-                'name'=>'insert-user',
-                'guard_name'=>"web",
-                'routes'=>"users.store",
-            ],
-            [
-                'name'=>'all-users',
-                'guard_name'=>"web",
-                'routes'=>"users.insex",
-            ],
-            [
-                'name'=>'show-user',
-                'guard_name'=>"web",
-                'routes'=>"users.show",
-            ],
-            [
-                'name'=>'delete-user',
-                'guard_name'=>"web",
-                'routes'=>"users.destroy",
-            ],
-            [
                 'name'=>'all-patients',
                 'guard_name'=>"web",
-                'routes'=>"patients.insex",
+                'routes'=>"patients.index",
             ],
             [
                 'name'=>'delete-patient',
@@ -194,7 +169,11 @@ class PermissionsTableSeeder extends Seeder
                 'guard_name'=>"web",
                 'routes'=>"companies.update",
             ],
-
+            [
+                'name'=>'edit-password-patient',
+                'guard_name'=>"web",
+                'routes'=>"patient.password.update",
+            ],
         ]);
     }
 }

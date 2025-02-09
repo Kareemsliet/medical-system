@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Api\PatientPasswordRequest;
 use App\Http\Requests\Api\PatientRequest;
 use App\Http\Resources\PatientResource;
 use App\Http\Services\ImageService;
 use App\Http\Services\UserService;
 use App\Models\Patient;
 use App\Models\User;
+use Illuminate\Http\Request;
 
 class PatientsController extends Controller
 {
@@ -110,4 +112,23 @@ class PatientsController extends Controller
 
         return successResponse("Successfully Deleted Done");
     }
+
+    public function updatePassword(PatientPasswordRequest $request){
+
+        $request->validated();
+
+        $user=User::where("email",$request->email)->first();
+
+        if($user){
+            if($user->isRole("patient") && $user->hasRole("patient")){
+                $user->update(['password'=>$request->password]);
+                return successResponse("Succefully Password updated");
+            }else{
+                return unAuthorize();
+            }
+        }else{
+            return failResponse("not found email");
+        }
+    }
+
 }

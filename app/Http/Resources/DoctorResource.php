@@ -21,7 +21,7 @@ class DoctorResource extends JsonResource
             "id"=> $this->id,
             "name"=> $this->name,
             "image"=>$this->image?(new ImageService)->imageUrlToBase64(Storage::url("doctors/$this->image")):"",
-            "signature"=>$this->image?( new ImageService)->imageUrlToBase64(Storage::url("doctors/$this->signature")):"",
+            "signature"=>$this->signature?( new ImageService)->imageUrlToBase64(Storage::url("doctors/$this->signature")):"",
             "scond_phone"=>$this->second_phone,
             "commission"=>$this->commission."%",
             "first_phone"=>$this->first_phone,

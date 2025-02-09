@@ -21,7 +21,7 @@ class PatientResource extends JsonResource
             "first_phone"=>$this->first_phone,
             "second_phone"=> $this->second_phone,
             "personal_id"=>$this->personal_id,
-            "personal_image"=>(new ImageService)->imageUrlToBase64(Storage::url("patients/$this->personal_image")),
+            "personal_image"=>$this->personal_image?(new ImageService)->imageUrlToBase64(Storage::url("patients/$this->personal_image")):"",
             "status"=>$this->status,
             "grander"=>$this->grander->name,
             "description"=>$this->description,

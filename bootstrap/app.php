@@ -1,12 +1,12 @@
 <?php
 
+use App\Http\Middleware\CompanyTrackRequest;
 use App\Http\Middleware\HasRole;
 use App\Http\Middleware\HasSupscribed;
 use App\Http\Middleware\UserRoles;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
-use Laravelcm\Subscriptions\Traits\HasPlanSubscriptions;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -27,6 +27,7 @@ return Application::configure(basePath: dirname(__DIR__))
            'autoPermission'=>UserRoles::class,
            'hasRole'=>HasRole::class,
            "hasSubscriped"=>HasSupscribed::class,
+           "track.request"=> CompanyTrackRequest::class,
         ]);
 
     })

@@ -21,20 +21,20 @@ class DoctorRequest extends FormRequest
      */
     public function rules(): array
     {
-       $id=$this->route('doctor',0);
+       $doctor=$this->route('doctor',0);
        return [
-            "name" => "required|string|max:100",
-            "first_phone" => "required|max:20|unique:doctors,first_phone,$id",
-            "second_phone" => "nullable|max:20|unique:doctors,second_phone,$id",
+            "name" => "required|string|max:100|unique:doctors,name,$doctor",
+            "first_phone" => "required|unique:doctors,first_phone,$doctor|unique:doctors,second_phone,$doctor",
+            "second_phone" => "nullable|unique:doctors,second_phone,$doctor|unique:doctors,first_phone,$doctor",
             "image" => $this->whenHas('image',function(){
                 return "image|max:15000|mimes:png,jpg,jpeg";
             },function(){
                 return "nullable";
             }),
             "commission" => "required|numeric",
-            "personal_id" => "required|max:20|unique:doctors,personal_id,$id",
+            "personal_id" => "required|max:20|unique:doctors,personal_id,$doctor",
             "status" => "required|in:0,1",
-            "signture" => $this->whenHas('image',function(){
+            "signture" => $this->whenHas('signture',function(){
                 return "image|max:15000|mimes:png,jpg,jpeg";
             },function(){
                 return "nullable";

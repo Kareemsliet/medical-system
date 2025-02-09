@@ -39,7 +39,7 @@ class PlansTableSeeder extends Seeder
             'sort_order' => 2,
             'currency' => 'EGP',
         ]);
-
+        
         Plan::create([
             'name' => 'Free',
             'description' => 'Free plan',

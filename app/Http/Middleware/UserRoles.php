@@ -17,7 +17,7 @@ class UserRoles
     public function handle(Request $request, Closure $next): Response
     {
         $route_name=$request->route()->getName();
-        $permission=Permission::whereRaw("FIND_IN_SET('$route_name',`routes`)")->first();
+        $permission=Permission::whereRaw("FIND_IN_SET('$route_name',routes)")->first();
         if($permission){
             if(!$request->user()->hasPermissionTo($permission)){
                 return unAuthorize();

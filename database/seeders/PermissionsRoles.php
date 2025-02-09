@@ -21,6 +21,8 @@ class PermissionsRoles extends Seeder
         
         $doctorPermissions=Permission::whereIn('name',["insert-doctor-action","edit-doctor-action","delete-doctor-action","show-doctor-action","all-doctor-actions","edit-profile"])->get();
 
+        $patientPermissions=Permission::whereIn('name',["edit-password-patient"])->get();
+
         $systemManager=Role::findByName("system_manager");
 
         $admin=Role::findByName('admin');
@@ -28,7 +30,9 @@ class PermissionsRoles extends Seeder
         $doctor=Role::findByName('doctor');
 
         $employee=Role::findByName('employee');
-        
+
+        $patient=Role::findByName('patient');
+
         $admin->syncPermissions($adminPermissions);
 
         $systemManager->syncPermissions($systemManagerPermissions);
@@ -36,5 +40,7 @@ class PermissionsRoles extends Seeder
         $employee->syncPermissions($employeePermissions);
 
         $doctor->syncPermissions($doctorPermissions);
+
+        $patient->syncPermissions($patientPermissions);
     }
 }
