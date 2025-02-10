@@ -6,6 +6,7 @@ use App\Http\Requests\Api\DoctorRequest;
 use App\Http\Resources\DoctorResource;
 use App\Http\Services\ImageService;
 use App\Http\Services\UserService;
+use App\Models\Clinic;
 use App\Models\Doctor;
 
 class DoctorsController extends Controller
@@ -19,7 +20,12 @@ class DoctorsController extends Controller
      */
     public function index()
     {
-        $doctors = Doctor::all();
+
+        $user=auth('sanctum')->user();
+
+        $company=$user->company;
+
+        $doctors = Doctor::byCompany($company->id)->get();
 
         return successResponse(data:DoctorResource::collection($doctors));
     }
@@ -31,7 +37,7 @@ class DoctorsController extends Controller
     {
         $request->validated();
 
-        $data = $request->only(['name','first_phone','second_phone','commission', 'status', 'personal_id']);
+        $data = $request->only(['name','first_phone','second_phone','commission', 'status', 'personal_id',"register_id"]);
 
         $user=(new UserService())->store($request->only(['email','password']),"doctor");
 
@@ -47,7 +53,11 @@ class DoctorsController extends Controller
 
         $doctor = $user->doctor()->create($data);
 
-        return successResponse(data:new DoctorResource($doctor));
+        $clinics=Clinic::findMany($request->clinics);
+
+        $doctor->clinics()->attach($clinics);
+
+        return successResponse(message:"تم اضافة الطبيب  بنجاح",data:new DoctorResource($doctor));
     }
 
     /**
@@ -58,7 +68,7 @@ class DoctorsController extends Controller
         $doctor = Doctor::find($id);
 
         if (!$doctor) {
-            return failResponse(message: "Doctor not found");
+            return failResponse(message: "الطبيب غير موجود");
         }
 
         return successResponse(data:new DoctorResource($doctor));
@@ -74,10 +84,10 @@ class DoctorsController extends Controller
         $doctor = Doctor::find($id);
 
         if (!$doctor) {
-            return failResponse(message: "Doctor not found");
+            return failResponse(message: "الطبيب غير موجود");
         }
 
-        $data = $request->only(['name','first_phone','second_phone','commission', 'status', 'personal_id']);
+        $data = $request->only(['name','first_phone','second_phone','commission', 'status', 'personal_id',"register_id"]);
 
         if ($request->file("image")) {
             if ($doctor->image) {
@@ -97,9 +107,19 @@ class DoctorsController extends Controller
 
         $doctor->update($data);
 
-        $doctor->user->update($request->only(['email','password']));
+        if($request->input('email')){
+            $doctor->user->update($request->only(['email']));
+        }
 
-        return successResponse(message: "Doctor updated successfully", data:new DoctorResource(($doctor)));
+        if($request->input("password")){
+            $doctor->user->update($request->only(['password']));
+        }
+
+        $clinics=Clinic::findMany($request->clinics);
+
+        $doctor->clinics()->sync($clinics);
+
+        return successResponse(message: "تم تعديل الطبيب بنجاح", data:new DoctorResource(($doctor)));
     }
 
     /**
@@ -110,13 +130,13 @@ class DoctorsController extends Controller
         $doctor = Doctor::find($id);
 
         if(!$doctor){
-            return failResponse(message:"Doctor not found");
+            return failResponse(message:"الطبيب غير موجود");
         }
 
         $doctor->user->delete();
 
         $doctor->delete();
 
-        return successResponse(message:"Doctor deleted successfully");
+        return successResponse(message:"تم حذف الطبيب بنجاح");
     }
 }

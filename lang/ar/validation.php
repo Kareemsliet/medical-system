@@ -209,6 +209,8 @@ return [
         "company_id"=>"الشركة",
         "price"=>"السعر",
         "description"=>"الوصف",
+        "register_id"=>"رقم التسجيل",
+        "clinics"=>"العيادات",
     ],
 
 ];

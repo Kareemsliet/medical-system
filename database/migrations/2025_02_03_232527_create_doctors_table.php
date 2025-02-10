@@ -20,6 +20,7 @@ return new class extends Migration
             $table->decimal('commission')->default(0);
             $table->tinyInteger('status')->default(1);
             $table->string('personal_id')->nullable();
+            $table->string("register_id")->nullable();
             $table->string('signature')->nullable();
             $table->bigInteger('user_id')->unsigned();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('restrict')->onUpdate('restrict');

@@ -4,26 +4,37 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\DoctorActionsRequest;
+use App\Http\Resources\DoctorActionResource;
+use App\Http\Resources\DoctorResource;
 use App\Http\Services\ImageService;
+use App\Models\Doctor;
+use App\Models\DoctorAction;
 use Illuminate\Http\Request;
+use Pest\Plugins\Only;
 
 class DoctorActionsController extends Controller
 {
     public $user;
     private $imageService;
     public function __construct(){
-        $this->user=auth('sanctum')->user();
+        $this->user = auth()->user();
         $this->imageService=new ImageService();
     }
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index($doctorId)
     {
-        $actions=$this->user->doctor->actions()->orderByDesc('created_at')->get();
 
-        return successResponse(data: $actions);
+        $doctor=Doctor::find($doctorId);
 
+        if (!$doctor) {
+            return failResponse(message: "الطبيب غير موجود");
+        }
+
+        $actions=$doctor->actions()->orderByDesc('created_at')->get();
+
+        return successResponse(data:DoctorActionResource::collection($actions));
     }
 
     /**
@@ -31,11 +42,15 @@ class DoctorActionsController extends Controller
      */
     public function store(DoctorActionsRequest $request)
     {
-        $data=$request->validated();
+        $request->validated();
 
-        $this->user->doctor->actions()->create($data);
+        $data=$request->only(['name','price']);
 
-        return successResponse(message:"Doctor Actions Successfully Storage",data:$data);
+        $doctor =Doctor::find($request->input("doctor_id"));
+
+        $action=$doctor->actions()->create($data);
+
+        return successResponse(message:"العملية تم اضافتها بنجاح",data:new DoctorActionResource($action));
     }
 
     /**
@@ -43,32 +58,34 @@ class DoctorActionsController extends Controller
      */
     public function show(string $id)
     {
-        $action=$this->user->doctor->actions()->with('doctor')->find($id);
+
+        $action=DoctorAction::find( $id);
 
         if(!$action){
-            return failResponse(message:"Action not found");
+            return failResponse(message:"العملية غير موجودة");
         }
 
-        return successResponse(data: $action);
-
+        return successResponse(data:new DoctorActionResource($action));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(DoctorActionsRequest $request, string $id)
+    public function update(DoctorActionsRequest $request,string $id)
     {
-        $data=$request->validated();
+        $request->validated();
 
-        $action=$this->user->doctor->actions()->find($id);
+        $data=$request->only(["name","price","doctor_id"]);
 
+        $action=DoctorAction::find($id);
+        
         if(!$action){
-            return failResponse(message:"Action not found");
+            return failResponse(message:"العملية غير موجودة");
         }
 
         $action->update($data);
 
-        return successResponse(message:"Doctor Actions Successfully updated",data:$data);
+        return successResponse("العملية تم تعديلها بنجاح",new DoctorActionResource($action));
     }
 
     /**
@@ -76,15 +93,16 @@ class DoctorActionsController extends Controller
      */
     public function destroy(string $id)
     {
-        $action=$this->user->doctor->actions()->find($id);
 
+        $action=DoctorAction::find($id);
+        
         if(!$action){
-            return failResponse(message:"Action not found");
+            return failResponse(message:"العملية غير موجودة");
         }
 
         $action->delete();
         
-        return successResponse(message:"Doctor Actions Delete Done");
+        return successResponse(message:"العملية تم حذفها بنجاح");
 
     }
 
@@ -119,7 +137,7 @@ class DoctorActionsController extends Controller
 
         $this->user->doctor->update($data);
 
-        return successResponse(message:"Doctor Has Updated",data:$this->user->doctor);
+        return successResponse(message:"تم تحديث الطبيب بنجاح",data:$this->user->doctor);
     }
 
 }

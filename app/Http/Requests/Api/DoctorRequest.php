@@ -22,6 +22,7 @@ class DoctorRequest extends FormRequest
     public function rules(): array
     {
        $doctor=$this->route('doctor',0);
+       
        return [
             "name" => "required|string|max:100|unique:doctors,name,$doctor",
             "first_phone" => "required|unique:doctors,first_phone,$doctor|unique:doctors,second_phone,$doctor",
@@ -39,8 +40,23 @@ class DoctorRequest extends FormRequest
             },function(){
                 return "nullable";
             }),
-            "email"=>"required|email|string",
-            "password"=>"required|string|min:8",
+            "clinics"=>"required|array",
+            "clinics.*"=>"required|exists:clinics,id",
+            "register_id"=>"required|string|unique:doctors,register_id,$doctor",
+            "email"=>$this->when(function(){
+                return $this->getMethod() == "PUT" || $this->getMethod() == "PATCH";
+            },function(){
+                return "nullable|email|string";
+            },function(){
+                return "required|email|string";
+            }),
+            "password"=>$this->when(function(){
+                return $this->getMethod() == "PUT" || $this->getMethod() == "PATCH";
+            },function(){
+                return "nullable|min:8|string";
+            },function(){
+                return "required|min:8|string";
+            }),
         ];
     }
 

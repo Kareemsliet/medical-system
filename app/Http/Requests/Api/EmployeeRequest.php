@@ -40,10 +40,22 @@ class EmployeeRequest extends FormRequest
             }),
             "jop"=>"string|required",
             "grander"=>"required|in:male,female",
-            "email"=>"required|email|string",
             "salary"=>"required|numeric",
             "role"=>"required||in:admin,employee|string",
-            "password"=>"required|string|min:8",
+            "email"=>$this->when(function(){
+                return $this->getMethod() == "PUT" || $this->getMethod() == "PATCH";
+            },function(){
+                return "nullable|email|string";
+            },function(){
+                return "required|email|string";
+            }),
+            "password"=>$this->when(function(){
+                return $this->getMethod() == "PUT" || $this->getMethod() == "PATCH";
+            },function(){
+                return "nullable|min:8|string";
+            },function(){
+                return "required|min:8|string";
+            }),
         ];
     }
 

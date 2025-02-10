@@ -25,8 +25,9 @@ Route::group(['middleware'=>['auth:sanctum',"autoPermission"]],function(){
     Route::apiResource('/doctors',DoctorsController::class);
     Route::apiResource("/employees",EmployeesController::class);
     Route::apiResource("/patients",PatientsController::class);
+    Route::apiResource('/actions',DoctorActionsController::class)->except(['index']);
+    Route::get("/{doctor_id}/actions",[DoctorActionsController::class,"index"])->name("action.index");
     Route::group(['middleware'=>"hasRole:doctor"],function(){
-        Route::apiResource('/actions',DoctorActionsController::class);
         Route::post("/profile/update",[DoctorActionsController::class,"updateProfile"])->name("profile.update");
     });
 });

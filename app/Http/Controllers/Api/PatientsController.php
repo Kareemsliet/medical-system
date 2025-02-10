@@ -9,7 +9,6 @@ use App\Http\Services\ImageService;
 use App\Http\Services\UserService;
 use App\Models\Patient;
 use App\Models\User;
-use Illuminate\Http\Request;
 
 class PatientsController extends Controller
 {
@@ -25,10 +24,13 @@ class PatientsController extends Controller
 
     public function index()
     {
-        $patients=Patient::all();
+        $user=auth('sanctum')->user();
+
+        $company=$user->company;
+
+        $patients=Patient::byCompany($company->id)->get();
 
         return successResponse(data:PatientResource::collection($patients));
-
     }
 
     /**
@@ -48,7 +50,7 @@ class PatientsController extends Controller
 
       $patient=$user->patient()->create($data);
 
-      return successResponse(data: new PatientResource($patient));
+      return successResponse(message:"تم تحديث المريض بنجاح",data:new PatientResource($patient));
     }
 
 
@@ -60,7 +62,7 @@ class PatientsController extends Controller
         $patient=Patient::find($id);
 
         if(!$patient){
-            return failResponse("Dont found patient");
+            return failResponse("المريض غير موجود");
         }
 
         return successResponse(data: new PatientResource($patient));
@@ -78,7 +80,7 @@ class PatientsController extends Controller
       $patient=Patient::find($id);
 
       if(!$patient){
-          return failResponse("Dont found patient");
+          return failResponse("لا يوجد مريض بهذا الرقم");
       }
 
       $this->imageService->destroyImage($patient->personal_image,"patients");
@@ -87,12 +89,17 @@ class PatientsController extends Controller
 
       $data['personal_image']=$personalImage;
 
-      $patient->user->update($request->only(['email','password']));
+      if($request->input('email')){
+        $patient->user->update($request->only(['email']));
+    }
+
+    if($request->input("password")){
+        $patient->user->update($request->only(['password']));
+    }
 
       $patient->update($data);
       
-      return successResponse(data: new PatientResource($patient));
-    
+      return successResponse(message:"تم تحديث المريض بنجاح",data: new PatientResource($patient));
     }
 
     /**
@@ -103,14 +110,14 @@ class PatientsController extends Controller
         $patient=Patient::find($id);
 
         if(!$patient){
-            return failResponse("Dont found patient");
+            return failResponse("المريض غير موجود");
         }
 
         $patient->user()->delete();
 
         $patient->delete();
 
-        return successResponse("Successfully Deleted Done");
+        return successResponse("تم حذف المريض بنجاح");
     }
 
     public function updatePassword(PatientPasswordRequest $request){
@@ -122,12 +129,12 @@ class PatientsController extends Controller
         if($user){
             if($user->isRole("patient") && $user->hasRole("patient")){
                 $user->update(['password'=>$request->password]);
-                return successResponse("Succefully Password updated");
+                return successResponse("تم تغيير كلمة المرور بنجاح");
             }else{
                 return unAuthorize();
             }
         }else{
-            return failResponse("not found email");
+            return failResponse("الايميل غير موجود");
         }
     }
 

@@ -17,8 +17,8 @@ class ClinicController extends Controller
     }
     public function index()
     {
-        $clinics = Clinic::all();
-     
+        $clinics = Clinic::byCompany($this->company->id)->get();
+
         return successResponse(data:ClinicResource::collection($clinics));
     }
     /**
@@ -41,7 +41,7 @@ class ClinicController extends Controller
         $clinic = Clinic::find($id);
 
         if(!$clinic){
-            return failResponse("لا يوجد عنصر بهذا id");
+            return failResponse(message: "الصيدلية غير موجودة");
         }
 
         return successResponse(data:new ClinicResource($clinic));
@@ -57,7 +57,7 @@ class ClinicController extends Controller
         $clinic= Clinic::find($id);
 
         if(!$clinic){
-            return failResponse("لا يوجد عنصر بهذا id");
+            return failResponse("الصيدلية غير موجودة");
         }
 
        $clinic->update($data);
@@ -73,7 +73,7 @@ class ClinicController extends Controller
         $clinic= Clinic::find($id);
 
         if(!$clinic){
-            return failResponse("لا يوجد عنصر بهذا id");
+            return failResponse("الصيدلية غير موجودة");
         }
 
         $clinic->delete();

@@ -24,8 +24,9 @@ class DoctorActionsRequest extends FormRequest
         $id=$this->route('action',0);
 
         return [
-            "name"=>"required|string|max:100|unique:doctor_actions,name,$id",
+            "name"=>"required|string|max:100",
             'price'=>"required|numeric",
+            "doctor_id"=>"required|exists:doctors,id",
         ];
     }
 

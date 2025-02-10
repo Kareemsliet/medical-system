@@ -37,8 +37,20 @@ class PatientRequest extends FormRequest
             "status"=>"required|in:0,1",
             "grander"=>"required|in:male,female",
             "description"=>"required|string|max:250",
-            "email"=>"required|email|string",
-            "password"=>"required|string|min:8",
+            "email"=>$this->when(function(){
+                return $this->getMethod() == "PUT" || $this->getMethod() == "PATCH";
+            },function(){
+                return "nullable|email|string";
+            },function(){
+                return "required|email|string";
+            }),
+            "password"=>$this->when(function(){
+                return $this->getMethod() == "PUT" || $this->getMethod() == "PATCH";
+            },function(){
+                return "nullable|min:8|string";
+            },function(){
+                return "required|min:8|string";
+            }),
         ];
     }
 

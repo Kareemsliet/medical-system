@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\GranderEnums;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -20,4 +21,13 @@ class Patient extends Model
         "grander"=>GranderEnums::class,
     ];
   }
+
+  public function scopeByCompany(Builder $builder,$company_id){
+    return $builder->whereHas('user',function($query)use($company_id){
+      $query->whereHas('company',function($query)use($company_id){
+          $query->where('companies.id','=',$company_id);
+      });
+    });
+}
+
 }

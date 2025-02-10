@@ -20,7 +20,12 @@ class EmployeesController extends Controller
      */
     public function index()
     {
-        $employees = Employee::all();
+
+        $user=auth('sanctum')->user();
+
+        $company=$user->company;
+
+        $employees = Employee::byCompany($company->id)->get();
 
         return successResponse(data:EmployeeResource::collection($employees));
     }
@@ -48,7 +53,7 @@ class EmployeesController extends Controller
 
         $employee = $user->employee()->create($data);
 
-        return successResponse(data:new EmployeeResource($employee));
+        return successResponse(message:"تم تحديث الموظف بنجاح",data:new EmployeeResource($employee));
     }
 
     /**
@@ -59,7 +64,7 @@ class EmployeesController extends Controller
         $employee = Employee::find($id);
 
         if (!$employee) {
-            return failResponse(message: "Employee not found");
+            return failResponse(message: "الموظف غير موجود");
         }
 
         return successResponse(data:new EmployeeResource($employee));
@@ -75,7 +80,7 @@ class EmployeesController extends Controller
         $employee = Employee::find($id);
 
         if (!$employee) {
-            return failResponse(message: "Employee not found");
+            return failResponse(message: "الموظف غير موجود");
         }
 
         $data = $request->only(['name','first_phone','second_phone','status',"grander",'personal_id','jop','salary']);
@@ -96,11 +101,17 @@ class EmployeesController extends Controller
             $data["personal_image"] = $personal_image;
         }
 
-        $employee->user->update($request->only(['email','password']));
+        if($request->input('email')){
+            $employee->user->update($request->only(['email']));
+        }
+
+        if($request->input("password")){
+            $employee->user->update($request->only(['password']));
+        }
 
         $employee->update($data);
 
-        return successResponse(message: "Employee updated successfully", data:new EmployeeResource(($employee)));
+        return successResponse(message: "تم تعديل الموظف بنجاح", data:new EmployeeResource(($employee)));
     }
 
     /**
@@ -111,13 +122,13 @@ class EmployeesController extends Controller
         $employee = Employee::find($id);
 
         if(!$employee){
-            return failResponse(message:"Employee not found");
+            return failResponse(message:"الموظف غير موجود");
         }
 
         $employee->user()->delete();
 
         $employee->delete();
 
-        return successResponse(message:"Employee deleted successfully");
+        return successResponse(message:"تم حذف الموظف بنجاح");
     }
 }
