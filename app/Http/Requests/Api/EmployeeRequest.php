@@ -24,14 +24,14 @@ class EmployeeRequest extends FormRequest
        $employee=$this->route('employee',0);
        return [
             "name" => "required|string|max:100|unique:employees,name,$employee",
-            "first_phone" => "required|max:20|unique:employees,first_phone,$employee|unique:employees,second_phone,$employee",
-            "second_phone" => "nullable|max:20|unique:employees,second_phone,$employee|unique:employees,first_phone,$employee",
+            "first_phone" => "required|unique:employees,first_phone,$employee|unique:employees,second_phone,$employee",
+            "second_phone" => "nullable|unique:employees,second_phone,$employee|unique:employees,first_phone,$employee",
             "image" => $this->whenHas('image',function(){
                 return "image|max:15000|mimes:png,jpg,jpeg";
             },function(){
                 return "nullable";
             }),
-            "personal_id" => "required|max:20|unique:employees,personal_id,$employee",
+            "personal_id" => "required|unique:employees,personal_id,$employee",
             "status" => "required|in:0,1",
             "personal_image" => $this->whenHas('personal_image',function(){
                 return "image|max:15000|mimes:png,jpg,jpeg";

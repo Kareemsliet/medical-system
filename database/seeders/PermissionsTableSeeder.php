@@ -145,31 +145,6 @@ class PermissionsTableSeeder extends Seeder
                 'routes'=>"employees.update",
             ],
             [
-                'name'=>'edit-company',
-                'guard_name'=>"web",
-                'routes'=>"companies.update",
-            ],
-            [
-                'name'=>'insert-company',
-                'guard_name'=>"web",
-                'routes'=>"companies.store",
-            ],
-            [
-                'name'=>'delete-company',
-                'guard_name'=>"web",
-                'routes'=>"companies.destroy",
-            ],
-            [
-                'name'=>'show-company',
-                'guard_name'=>"web",
-                'routes'=>"companies.show",
-            ],
-            [
-                'name'=>'all-companies',
-                'guard_name'=>"web",
-                'routes'=>"companies.update",
-            ],
-            [
                 'name'=>'edit-password-patient',
                 'guard_name'=>"web",
                 'routes'=>"patient.password.update",

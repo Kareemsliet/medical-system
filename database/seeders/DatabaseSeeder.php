@@ -21,6 +21,7 @@ class DatabaseSeeder extends Seeder
            PlansTableSeeder::class,
            PlanFeaturesSeeder::class,
            SubscriptionsTableSeeder::class,
+           MangmentsTableSeeder::class,
         ]);
     }
 }

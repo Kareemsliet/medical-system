@@ -19,6 +19,5 @@ class SubscriptionsTableSeeder extends Seeder
         $company=Company::find(1);
 
         $company->newPlanSubscription("main",$plan);
-
     }
 }

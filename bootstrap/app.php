@@ -30,6 +30,21 @@ return Application::configure(basePath: dirname(__DIR__))
            "track.request"=> CompanyTrackRequest::class,
         ]);
 
+        $middleware->redirectUsersTo(function(){
+            if(auth('manager')->check()){
+                return route("panel.index");
+            }else{
+                return route("panel.index");
+            }
+        });
+
+        $middleware->redirectGuestsTo(function(){
+            if(auth('manager')->guest()){
+                return route("panel.login");
+            }else{
+                return route("panel.login");
+            }
+        });
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //

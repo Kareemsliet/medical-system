@@ -7,7 +7,6 @@ use App\Http\Resources\DoctorResource;
 use App\Http\Services\ImageService;
 use App\Http\Services\UserService;
 use App\Models\Doctor;
-use App\Models\User;
 
 class DoctorsController extends Controller
 {

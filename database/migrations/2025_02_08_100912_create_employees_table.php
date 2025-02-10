@@ -15,14 +15,14 @@ return new class extends Migration
         Schema::create('employees', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string("personal_id");
+            $table->string("personal_id")->nullable();
             $table->string("personal_image")->nullable();
             $table->string("image")->nullable();
-            $table->string("first_phone");
+            $table->string("first_phone")->nullable();
             $table->string("second_phone")->nullable();
             $table->tinyInteger("status")->default(1);
             $table->text("description")->nullable();
-            $table->string("jop");
+            $table->string("jop")->nullable();
             $table->decimal("salary")->default(0);
             $table->string("grander")->default(GranderEnums::Male->value);  
             $table->bigInteger('user_id')->unsigned();

@@ -32,7 +32,7 @@ class DoctorRequest extends FormRequest
                 return "nullable";
             }),
             "commission" => "required|numeric",
-            "personal_id" => "required|max:20|unique:doctors,personal_id,$doctor",
+            "personal_id" => "required|unique:doctors,personal_id,$doctor",
             "status" => "required|in:0,1",
             "signture" => $this->whenHas('signture',function(){
                 return "image|max:15000|mimes:png,jpg,jpeg";
