@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\GranderEnums;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -9,7 +10,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Doctor extends Model
 {
     use SoftDeletes;
-    protected $fillable = ['name','company_id','first_phone', 'second_phone', 'image', 'commission', 'status', 'personal_id', 'signature','register_id',"user_id"];  
+    protected $fillable = ['name','company_id','first_phone', 'second_phone', 'image', 'commission', 'status', 'personal_id', 'signature','register_id',"user_id","grander"];  
 
     protected $table='doctors';
 
@@ -23,10 +24,10 @@ class Doctor extends Model
     protected function casts(){
         return [
             'commission' => 'float',
-            'status' => 'boolean'
+            'status' => 'boolean',
+            "grander"=>GranderEnums::class,
         ];
     }
-
     public function actions(){
         return $this->hasMany(DoctorAction::class,'doctor_id');
     }

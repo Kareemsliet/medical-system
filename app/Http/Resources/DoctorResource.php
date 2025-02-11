@@ -31,6 +31,7 @@ class DoctorResource extends JsonResource
             "created_at"=>$this->created_at,
             "clinics"=>ClinicResource::collection($this->clinics()->orderByPivot("created_at","desc")->get()),
             "register_id"=>$this->register_id,
+            "grander"=>$this->grander->name,
         ];
     }
 }

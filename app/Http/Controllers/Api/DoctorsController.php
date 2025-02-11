@@ -37,7 +37,7 @@ class DoctorsController extends Controller
     {
         $request->validated();
 
-        $data = $request->only(['name','first_phone','second_phone','commission', 'status', 'personal_id',"register_id"]);
+        $data = $request->only(['name','first_phone','second_phone','commission', 'status', 'personal_id',"register_id","grander"]);
 
         $user=(new UserService())->store($request->only(['email','password']),"doctor");
 
@@ -87,7 +87,7 @@ class DoctorsController extends Controller
             return failResponse(message: "الطبيب غير موجود");
         }
 
-        $data = $request->only(['name','first_phone','second_phone','commission', 'status', 'personal_id',"register_id"]);
+        $data = $request->only(['name','first_phone','second_phone','commission', 'status', 'personal_id',"register_id","grander"]);
 
         if ($request->file("image")) {
             if ($doctor->image) {

@@ -57,6 +57,7 @@ class DoctorRequest extends FormRequest
             },function(){
                 return "required|min:8|string";
             }),
+            "grander"=>"required|in:male,female",
         ];
     }
 
