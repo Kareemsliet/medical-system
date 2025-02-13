@@ -2,7 +2,7 @@
 
 namespace App\Enums;
 
-enum GranderEnums:string
+enum GenderEnums:string
 {
     case Male="male";
     case Female="female";

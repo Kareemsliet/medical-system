@@ -58,9 +58,11 @@ class User extends Authenticatable
     public function employee(){
         return $this->hasOne(Employee::class,'user_id');
     }
-
-    public function isRole($role){
-        return $this->has("$role")->first();
+    public function isRole(string $role){
+        
+        return $this->whereHas("$role",function($query){
+            $query->where("user_id",'=',$this->id);
+        })->exists();
     }
     public function company(){
         return $this->belongsTo(Company::class);

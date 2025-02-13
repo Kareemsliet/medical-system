@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Enums\GranderEnums;
+use App\Enums\GenderEnums;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Employee extends Model
 {
     use SoftDeletes;
-    protected $fillable =['name',"personal_id","personal_image","image","first_phone","second_phone",'status',"grander","jop","salary"];
+    protected $fillable =['name',"personal_id","personal_image","image","first_phone","second_phone",'status',"gender","jop","salary"];
     
     public function user(){
         return $this->belongsTo(User::class);
@@ -18,7 +18,7 @@ class Employee extends Model
     protected function casts(){
         return [
             'status'=>"boolean",
-            "grander"=>GranderEnums::class,
+            "gender"=>GenderEnums::class,
         ];
     }
 

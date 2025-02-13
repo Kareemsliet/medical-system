@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Enums\GranderEnums;
+use App\Enums\GenderEnums;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Doctor extends Model
 {
     use SoftDeletes;
-    protected $fillable = ['name','company_id','first_phone', 'second_phone', 'image', 'commission', 'status', 'personal_id', 'signature','register_id',"user_id","grander"];  
+    protected $fillable = ['name','company_id','first_phone', 'second_phone', 'image', 'commission', 'status', 'personal_id', 'signature','register_id',"user_id","gender"];  
 
     protected $table='doctors';
 
@@ -25,7 +25,7 @@ class Doctor extends Model
         return [
             'commission' => 'float',
             'status' => 'boolean',
-            "grander"=>GranderEnums::class,
+            "gender"=>GenderEnums::class,
         ];
     }
     public function actions(){

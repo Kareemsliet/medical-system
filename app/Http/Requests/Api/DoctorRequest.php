@@ -2,6 +2,8 @@
 
 namespace App\Http\Requests\Api;
 
+use App\Models\Doctor;
+use App\Rules\UniqueEmailCompany;
 use Illuminate\Foundation\Http\FormRequest;
 
 class DoctorRequest extends FormRequest
@@ -43,12 +45,12 @@ class DoctorRequest extends FormRequest
             "clinics"=>"required|array",
             "clinics.*"=>"required|exists:clinics,id",
             "register_id"=>"required|string|unique:doctors,register_id,$doctor",
-            "email"=>$this->when(function(){
-                return $this->getMethod() == "PUT" || $this->getMethod() == "PATCH";
+            "email"=>$this->when(function()use($doctor){
+                return ($this->getMethod() == "PUT" || $this->getMethod() == "PATCH") &&  Doctor::find($doctor);
             },function(){
-                return "nullable|email|string";
+                return ["nullable","email","string",new UniqueEmailCompany("users",Doctor::find($this->route("doctor"))->user->id)];
             },function(){
-                return "required|email|string";
+                return ["required","email","string",new UniqueEmailCompany("users")];
             }),
             "password"=>$this->when(function(){
                 return $this->getMethod() == "PUT" || $this->getMethod() == "PATCH";
@@ -57,7 +59,7 @@ class DoctorRequest extends FormRequest
             },function(){
                 return "required|min:8|string";
             }),
-            "grander"=>"required|in:male,female",
+            "gender"=>"required|in:male,female",
         ];
     }
 

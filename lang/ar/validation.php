@@ -211,6 +211,7 @@ return [
         "description"=>"الوصف",
         "register_id"=>"رقم التسجيل",
         "clinics"=>"العيادات",
+        "clinics.*"=>"العياده",
     ],
 
 ];

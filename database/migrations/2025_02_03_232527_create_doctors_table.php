@@ -1,6 +1,6 @@
 <?php
 
-use App\Enums\GranderEnums;
+use App\Enums\GenderEnums;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -23,7 +23,7 @@ return new class extends Migration
             $table->string('personal_id')->nullable();
             $table->string("register_id")->nullable();
             $table->string('signature')->nullable();
-            $table->string("grander")->default(GranderEnums::Male->value);  
+            $table->string("gender")->default(GenderEnums::Male->value);  
             $table->bigInteger('user_id')->unsigned();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('restrict')->onUpdate('restrict');
             $table->softDeletes();

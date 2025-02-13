@@ -90,11 +90,6 @@ class PermissionsTableSeeder extends Seeder
                 'routes'=>"actions.show",
             ],
             [
-                'name'=>'edit-profile',
-                'guard_name'=>"web",
-                'routes'=>"profile.update",
-            ],
-            [
                 'name'=>'all-patients',
                 'guard_name'=>"web",
                 'routes'=>"patients.index",
@@ -142,12 +137,12 @@ class PermissionsTableSeeder extends Seeder
             [
                 'name'=>'all-employees',
                 'guard_name'=>"web",
-                'routes'=>"employees.update",
+                'routes'=>"employees.index",
             ],
             [
-                'name'=>'edit-password-patient',
+                'name'=>'edit-password',
                 'guard_name'=>"web",
-                'routes'=>"patient.password.update",
+                'routes'=>"profile.password.update",
             ],
         ]);
     }

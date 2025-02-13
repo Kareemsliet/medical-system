@@ -2,13 +2,11 @@
 
 namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Api\PatientPasswordRequest;
 use App\Http\Requests\Api\PatientRequest;
 use App\Http\Resources\PatientResource;
 use App\Http\Services\ImageService;
 use App\Http\Services\UserService;
 use App\Models\Patient;
-use App\Models\User;
 
 class PatientsController extends Controller
 {
@@ -16,21 +14,22 @@ class PatientsController extends Controller
      * Display a listing of the resource.
      */
 
-     public $imageService;
+    public $imageService;
 
-     public function __construct(){
+    public function __construct()
+    {
         $this->imageService = new ImageService();
-     }
+    }
 
     public function index()
     {
-        $user=auth('sanctum')->user();
+        $user = auth('sanctum')->user();
 
-        $company=$user->company;
+        $company = $user->company;
 
-        $patients=Patient::byCompany($company->id)->get();
+        $patients = Patient::byCompany($company->id)->get();
 
-        return successResponse(data:PatientResource::collection($patients));
+        return successResponse(data: PatientResource::collection($patients));
     }
 
     /**
@@ -38,19 +37,22 @@ class PatientsController extends Controller
      */
     public function store(PatientRequest $request)
     {
-      $request->validated();
-      
-      $data=$request->only(['name',"first_phone","second_phone","another_name","description","personal_id","status","grander"]);
-      
-      $user=(new UserService())->store($request->only(['email','password']),"patient");
+        $request->validated();
 
-      $personalImage=$this->imageService->uploadImage($request->file("personal_image"),"patients");
+        $data = $request->only(['name', "first_phone", "second_phone", "another_name", "description", "personal_id", "status", "gender"]);
 
-      $data['personal_image']=$personalImage;
+        $user = (new UserService())->store($request->only(['email', 'password']), "patient");
 
-      $patient=$user->patient()->create($data);
+        if ($request->file("personal_image")) {
+            
+            $personalImage = $this->imageService->uploadImage($request->file("personal_image"), "patients");
 
-      return successResponse(message:"تم تحديث المريض بنجاح",data:new PatientResource($patient));
+            $data['personal_image'] = $personalImage;
+        }
+
+        $patient = $user->patient()->create($data);
+
+        return successResponse(message: "تم تحديث المريض بنجاح", data: new PatientResource($patient));
     }
 
 
@@ -59,9 +61,9 @@ class PatientsController extends Controller
      */
     public function show(string $id)
     {
-        $patient=Patient::find($id);
+        $patient = Patient::find($id);
 
-        if(!$patient){
+        if (!$patient) {
             return failResponse("المريض غير موجود");
         }
 
@@ -73,33 +75,35 @@ class PatientsController extends Controller
      */
     public function update(PatientRequest $request, string $id)
     {
-      $request->validated();
+        $patient = Patient::find($id);
 
-      $data=$request->only(['name',"first_phone","second_phone","another_name","description","personal_id","status","grander"]);
+        if (!$patient) {
+            return failResponse("لا يوجد مريض بهذا الرقم");
+        }
 
-      $patient=Patient::find($id);
+        $request->validated();
 
-      if(!$patient){
-          return failResponse("لا يوجد مريض بهذا الرقم");
-      }
+        $data = $request->only(['name', "first_phone", "second_phone", "another_name", "description", "personal_id", "status", "gender"]);
 
-      $this->imageService->destroyImage($patient->personal_image,"patients");
+        if ($request->file("personal_image")) {
+            if ($patient->personal_image) {
+                (new ImageService())->destroyImage($patient->personal_image, "patients");
+            }
+            $personal_image = (new ImageService())->uploadImage($request->file("personal_image"), "patients");
+            $data["personal_image"] = $personal_image;
+        }
 
-      $personalImage=$this->imageService->uploadImage($request->file("personal_image"),"patients");
+        if ($request->input('email')) {
+            $patient->user->update($request->only(['email']));
+        }
 
-      $data['personal_image']=$personalImage;
+        if ($request->input("password")) {
+            $patient->user->update($request->only(['password']));
+        }
 
-      if($request->input('email')){
-        $patient->user->update($request->only(['email']));
-    }
+        $patient->update($data);
 
-    if($request->input("password")){
-        $patient->user->update($request->only(['password']));
-    }
-
-      $patient->update($data);
-      
-      return successResponse(message:"تم تحديث المريض بنجاح",data: new PatientResource($patient));
+        return successResponse(message: "تم تحديث المريض بنجاح", data: new PatientResource($patient));
     }
 
     /**
@@ -107,9 +111,9 @@ class PatientsController extends Controller
      */
     public function destroy(string $id)
     {
-        $patient=Patient::find($id);
+        $patient = Patient::find($id);
 
-        if(!$patient){
+        if (!$patient) {
             return failResponse("المريض غير موجود");
         }
 
@@ -119,23 +123,4 @@ class PatientsController extends Controller
 
         return successResponse("تم حذف المريض بنجاح");
     }
-
-    public function updatePassword(PatientPasswordRequest $request){
-
-        $request->validated();
-
-        $user=User::where("email",$request->email)->first();
-
-        if($user){
-            if($user->isRole("patient") && $user->hasRole("patient")){
-                $user->update(['password'=>$request->password]);
-                return successResponse("تم تغيير كلمة المرور بنجاح");
-            }else{
-                return unAuthorize();
-            }
-        }else{
-            return failResponse("الايميل غير موجود");
-        }
-    }
-
 }

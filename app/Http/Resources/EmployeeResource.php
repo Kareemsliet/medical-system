@@ -17,6 +17,7 @@ class EmployeeResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
+            "id"=>$this->id,
             "name"=>$this->name,
             "first_phone"=>$this->first_phone,
             "second_phone"=> $this->second_phone,
@@ -24,7 +25,7 @@ class EmployeeResource extends JsonResource
             "image"=>$this->image?(new ImageService)->imageUrlToBase64(Storage::url("employees/$this->image")):"",
             "personal_image"=>$this->personal_image?(new ImageService)->imageUrlToBase64(Storage::url("employees/$this->personal_image")):"",
             "status"=>$this->status,
-            "grander"=>$this->grander->name,
+            "gender"=>$this->gender->name,
             "jop"=>$this->jop,
             "salary"=>$this->salary,
             "user"=>new UserResource($this->user),

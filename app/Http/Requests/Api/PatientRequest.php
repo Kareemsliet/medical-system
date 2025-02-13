@@ -2,6 +2,8 @@
 
 namespace App\Http\Requests\Api;
 
+use App\Models\Patient;
+use App\Rules\UniqueEmailCompany;
 use Illuminate\Foundation\Http\FormRequest;
 
 class PatientRequest extends FormRequest
@@ -35,14 +37,14 @@ class PatientRequest extends FormRequest
                 return "nullable";
             }),
             "status"=>"required|in:0,1",
-            "grander"=>"required|in:male,female",
+            "gender"=>"required|in:male,female",
             "description"=>"required|string|max:250",
-            "email"=>$this->when(function(){
-                return $this->getMethod() == "PUT" || $this->getMethod() == "PATCH";
+            "email"=>$this->when(function()use($patient){
+                return ($this->getMethod() == "PUT" || $this->getMethod() == "PATCH") &&  Patient::find($patient);
             },function(){
-                return "nullable|email|string";
+                return ["nullable","email","string",new UniqueEmailCompany("users",Patient::find($this->route("patient"))->user->id)];
             },function(){
-                return "required|email|string";
+                return ["required","email","string",new UniqueEmailCompany("users")];
             }),
             "password"=>$this->when(function(){
                 return $this->getMethod() == "PUT" || $this->getMethod() == "PATCH";

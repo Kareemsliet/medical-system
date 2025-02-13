@@ -37,7 +37,7 @@ class DoctorsController extends Controller
     {
         $request->validated();
 
-        $data = $request->only(['name','first_phone','second_phone','commission', 'status', 'personal_id',"register_id","grander"]);
+        $data = $request->only(['name','first_phone','second_phone','commission', 'status', 'personal_id',"register_id","gender"]);
 
         $user=(new UserService())->store($request->only(['email','password']),"doctor");
 
@@ -79,15 +79,15 @@ class DoctorsController extends Controller
      */
     public function update(DoctorRequest $request, string $id)
     {
-        $request->validated();
-
         $doctor = Doctor::find($id);
 
         if (!$doctor) {
             return failResponse(message: "الطبيب غير موجود");
         }
 
-        $data = $request->only(['name','first_phone','second_phone','commission', 'status', 'personal_id',"register_id","grander"]);
+        $request->validated();
+
+        $data = $request->only(['name','first_phone','second_phone','commission', 'status', 'personal_id',"register_id","gender"]);
 
         if ($request->file("image")) {
             if ($doctor->image) {

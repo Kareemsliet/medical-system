@@ -19,6 +19,10 @@ class UserTestSeeder extends Seeder
             "company_id"=>1,
         ]);
 
+        $adminUser->employee()->create([
+            "name"=>"admin",
+        ]);
+
         $adminUser->assignRole('admin');
 
     }

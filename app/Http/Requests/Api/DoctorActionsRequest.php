@@ -21,8 +21,6 @@ class DoctorActionsRequest extends FormRequest
      */
     public function rules(): array
     {
-        $id=$this->route('action',0);
-
         return [
             "name"=>"required|string|max:100",
             'price'=>"required|numeric",

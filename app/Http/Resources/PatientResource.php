@@ -16,6 +16,7 @@ class PatientResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
+            "id"=>$this->id,
             "name"=>$this->name,
             "another_name"=>$this->another_name,
             "first_phone"=>$this->first_phone,
@@ -23,7 +24,7 @@ class PatientResource extends JsonResource
             "personal_id"=>$this->personal_id,
             "personal_image"=>$this->personal_image?(new ImageService)->imageUrlToBase64(Storage::url("patients/$this->personal_image")):"",
             "status"=>$this->status,
-            "grander"=>$this->grander->name,
+            "gender"=>$this->gender->name,
             "description"=>$this->description,
             "user"=>new UserResource($this->user),
         ];

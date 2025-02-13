@@ -2,6 +2,8 @@
 
 namespace App\Http\Requests\Api;
 
+use App\Models\Employee;
+use App\Rules\UniqueEmailCompany;
 use Illuminate\Foundation\Http\FormRequest;
 
 class EmployeeRequest extends FormRequest
@@ -39,15 +41,15 @@ class EmployeeRequest extends FormRequest
                 return "nullable";
             }),
             "jop"=>"string|required",
-            "grander"=>"required|in:male,female",
+            "gender"=>"required|in:male,female",
             "salary"=>"required|numeric",
             "role"=>"required||in:admin,employee|string",
-            "email"=>$this->when(function(){
-                return $this->getMethod() == "PUT" || $this->getMethod() == "PATCH";
+            "email"=>$this->when(function()use($employee){
+                return ($this->getMethod() == "PUT" || $this->getMethod() == "PATCH") &&  Employee::find($employee);
             },function(){
-                return "nullable|email|string";
+                return ["nullable","email","string",new UniqueEmailCompany("users",Employee::find($this->route("employee"))->user->id)];
             },function(){
-                return "required|email|string";
+                return ["required","email","string",new UniqueEmailCompany("users")];
             }),
             "password"=>$this->when(function(){
                 return $this->getMethod() == "PUT" || $this->getMethod() == "PATCH";

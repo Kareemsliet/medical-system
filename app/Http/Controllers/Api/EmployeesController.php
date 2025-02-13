@@ -37,7 +37,7 @@ class EmployeesController extends Controller
     {
         $request->validated();
 
-        $data = $request->only(['name','first_phone','second_phone','status',"grander",'personal_id','jop','salary']);
+        $data = $request->only(['name','first_phone','second_phone','status',"gender",'personal_id','jop','salary']);
 
         $user=(new UserService())->store($request->only(['email','password']),$request->role);
 
@@ -75,15 +75,15 @@ class EmployeesController extends Controller
      */
     public function update(EmployeeRequest $request, string $id)
     {
-        $request->validated();
-
         $employee = Employee::find($id);
 
         if (!$employee) {
             return failResponse(message: "الموظف غير موجود");
         }
+        
+        $request->validated();
 
-        $data = $request->only(['name','first_phone','second_phone','status',"grander",'personal_id','jop','salary']);
+        $data = $request->only(['name','first_phone','second_phone','status',"gender",'personal_id','jop','salary']);
 
         if ($request->file("image")) {
             if ($employee->image) {

@@ -13,13 +13,13 @@ class PermissionsRoles extends Seeder
      */
     public function run(): void
     {
-        $adminPermissions=Permission::whereIn('name',['insert-clinic','edit-clinic','delete-clinic','all-clinics','show-clinic','insert-doctor','edit-doctor','delete-doctor','all-doctors','show-doctor',"all-patients","delete-patient","show-patient","insert-patient","edit-patient","insert-employee","delete-employee","edit-employee","all-employees",'show-employee',"insert-doctor-action","edit-doctor-action","delete-doctor-action","show-doctor-action","all-doctor-actions"])->get();
+        $adminPermissions=Permission::whereIn('name',['insert-clinic','edit-clinic','delete-clinic','all-clinics','show-clinic','insert-doctor','edit-doctor','delete-doctor','all-doctors','show-doctor',"all-patients","delete-patient","show-patient","insert-patient","edit-patient","insert-employee","delete-employee","edit-employee","all-employees",'show-employee',"insert-doctor-action","edit-doctor-action","delete-doctor-action","show-doctor-action","all-doctor-actions","edit-password"])->get();
 
-        $employeePermissions=Permission::whereIn('name',['insert-clinic','edit-clinic','delete-clinic','insert-doctor','edit-doctor','delete-doctor',"delete-patient","insert-patient","edit-patient","insert-doctor-action","edit-doctor-action","delete-doctor-action"])->get();
+        $employeePermissions=Permission::whereIn('name',['insert-clinic','edit-clinic','delete-clinic','insert-doctor','edit-doctor','delete-doctor',"delete-patient","insert-patient","edit-patient","insert-doctor-action","edit-doctor-action","delete-doctor-action","edit-password"])->get();
         
-        $doctorPermissions=Permission::whereIn('name',["edit-profile"])->get();
+        $doctorPermissions=Permission::whereIn('name',["edit-password"])->get();
 
-        $patientPermissions=Permission::whereIn('name',["edit-password-patient"])->get();
+        $patientPermissions=Permission::whereIn('name',["edit-password"])->get();
 
         $admin=Role::findByName('admin');
 

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\AuthRequest;
+use App\Http\Requests\Api\PasswordRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -52,6 +53,22 @@ class AuthController extends Controller
                 'auth' => true,
             ], 200);
         }
+    }
+
+    public function updatePassword(PasswordRequest $request){
+        $request->validated();
+
+        $user=User::where("email",'=',$request->input("email"))->first();
+
+        if(!$user){
+            return failResponse(__("auth.failed"));
+        }
+
+        $user->update([
+            'password'=>$request->input('password'),
+        ]);
+
+        return successResponse(message:'تم تحديث كلمة المرور بنجاح');
     }
 
 }
