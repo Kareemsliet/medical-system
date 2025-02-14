@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Http\Controllers\Api;
-
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\ProfileRequest;
 use App\Http\Resources\DoctorResource;
@@ -96,5 +95,4 @@ class MainController extends Controller
 
         return failResponse(" المستخدم يجب ان يكون مريض او دكتور لحين نزول تحديث اخر");
     }
-
 }

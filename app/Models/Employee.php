@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Employee extends Model
 {
     use SoftDeletes;
-    protected $fillable =['name',"personal_id","personal_image","image","first_phone","second_phone",'status',"gender","jop","salary"];
+    protected $fillable =['name',"personal_id","personal_image","image","first_phone","second_phone",'status',"gender","job","salary"];
     
     public function user(){
         return $this->belongsTo(User::class);

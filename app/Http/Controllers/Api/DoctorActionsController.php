@@ -4,10 +4,12 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\DoctorActionsRequest;
+use App\Http\Resources\Collection\DoctorActionsCollection;
 use App\Http\Resources\DoctorActionResource;
 use App\Http\Services\ImageService;
 use App\Models\Doctor;
 use App\Models\DoctorAction;
+use Illuminate\Http\Request;
 
 class DoctorActionsController extends Controller
 {
@@ -20,8 +22,9 @@ class DoctorActionsController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index($doctorId)
+    public function index(Request $request,$doctorId)
     {
+        $limit=$request->query('limit',20);
 
         $doctor=Doctor::find($doctorId);
 
@@ -29,9 +32,11 @@ class DoctorActionsController extends Controller
             return failResponse(message: "الطبيب غير موجود");
         }
 
-        $actions=$doctor->actions()->orderByDesc('created_at')->get();
+        $actions=$doctor->actions()->orderByDesc('created_at')->paginate($limit);
 
-        return successResponse(data:DoctorActionResource::collection($actions));
+        $actions->withQueryString();
+
+        return successResponse(data:new DoctorActionsCollection($actions));
     }
 
     /**

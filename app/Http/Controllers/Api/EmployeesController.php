@@ -4,10 +4,12 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\EmployeeRequest;
+use App\Http\Resources\Collection\EmployeesCollection;
 use App\Http\Resources\EmployeeResource;
 use App\Http\Services\ImageService;
 use App\Http\Services\UserService;
 use App\Models\Employee;
+use Illuminate\Http\Request;
 
 class EmployeesController extends Controller
 {
@@ -18,16 +20,17 @@ class EmployeesController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
+        $limit=$request->query('limit',20);
 
         $user=auth('sanctum')->user();
 
         $company=$user->company;
 
-        $employees = Employee::byCompany($company->id)->get();
+        $employees = Employee::byCompany($company->id)->orderByDesc("created_at")->paginate($limit)->withQueryString();
 
-        return successResponse(data:EmployeeResource::collection($employees));
+        return successResponse(data:new EmployeesCollection($employees));
     }
 
     /**
@@ -37,7 +40,7 @@ class EmployeesController extends Controller
     {
         $request->validated();
 
-        $data = $request->only(['name','first_phone','second_phone','status',"gender",'personal_id','jop','salary']);
+        $data = $request->only(['name','first_phone','second_phone','status',"gender",'personal_id','job','salary']);
 
         $user=(new UserService())->store($request->only(['email','password']),$request->role);
 
@@ -83,7 +86,7 @@ class EmployeesController extends Controller
         
         $request->validated();
 
-        $data = $request->only(['name','first_phone','second_phone','status',"gender",'personal_id','jop','salary']);
+        $data = $request->only(['name','first_phone','second_phone','status',"gender",'personal_id','job','salary']);
 
         if ($request->file("image")) {
             if ($employee->image) {

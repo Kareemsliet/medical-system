@@ -22,7 +22,7 @@ return new class extends Migration
             $table->string("second_phone")->nullable();
             $table->tinyInteger("status")->default(1);
             $table->text("description")->nullable();
-            $table->string("jop")->nullable();
+            $table->string("job")->nullable();
             $table->decimal("salary")->default(0);
             $table->string("gender")->default(GenderEnums::Male->value);  
             $table->bigInteger('user_id')->unsigned();

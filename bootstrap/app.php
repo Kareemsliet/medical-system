@@ -3,10 +3,13 @@
 use App\Http\Middleware\CompanyTrackRequest;
 use App\Http\Middleware\HasRole;
 use App\Http\Middleware\HasSupscribed;
+use App\Http\Middleware\HasVerified;
+use App\Http\Middleware\ThrottleApi;
 use App\Http\Middleware\UserRoles;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
+use Illuminate\Routing\Middleware\ThrottleRequests;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -28,6 +31,8 @@ return Application::configure(basePath: dirname(__DIR__))
            'hasRole'=>HasRole::class,
            "hasSubscriped"=>HasSupscribed::class,
            "track.request"=> CompanyTrackRequest::class,
+           "hasVerified"=>HasVerified::class,
+           "throttleApi"=>ThrottleApi::class,
         ]);
 
         $middleware->redirectUsersTo(function(){

@@ -17,6 +17,7 @@ class CompaniesTableSeeder extends Seeder
             'name'=>"Al Ahram-Group",
             "name_manager"=>"Eng.Eslam Elgohry",
             "phone_manager"=>"01066201102",
+            "url"=>"http://localhost:8000",
         ]);
     }
 }

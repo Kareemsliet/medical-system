@@ -26,7 +26,7 @@ class EmployeeResource extends JsonResource
             "personal_image"=>$this->personal_image?(new ImageService)->imageUrlToBase64(Storage::url("employees/$this->personal_image")):"",
             "status"=>$this->status,
             "gender"=>$this->gender->name,
-            "jop"=>$this->jop,
+            "job"=>$this->job,
             "salary"=>$this->salary,
             "user"=>new UserResource($this->user),
         ];

@@ -17,6 +17,7 @@ class UserTestSeeder extends Seeder
             'email'=>"admin@gmail.com",
             "password"=>bcrypt("admin@345"),
             "company_id"=>1,
+            "email_verified_at"=>now(),
         ]);
 
         $adminUser->employee()->create([

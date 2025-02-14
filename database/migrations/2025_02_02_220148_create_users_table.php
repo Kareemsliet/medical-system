@@ -19,8 +19,12 @@ return new class extends Migration
             $table->foreign('company_id')->references('id')->on('companies')->onDelete('restrict')->onUpdate('restrict');
             $table->rememberToken();
             $table->softDeletes();
+            $table->timestamp("email_verified_at")->nullable();
+            $table->string("email_verified_code")->nullable();
+            $table->string("pin_code")->nullable();
             $table->timestamps();
         });
+
         Schema::create('cache', function (Blueprint $table) {
             $table->string('key')->primary();
             $table->mediumText('value');

@@ -3,11 +3,13 @@
 namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\DoctorRequest;
+use App\Http\Resources\Collection\DoctorsCollection;
 use App\Http\Resources\DoctorResource;
 use App\Http\Services\ImageService;
 use App\Http\Services\UserService;
 use App\Models\Clinic;
 use App\Models\Doctor;
+use Illuminate\Http\Request;
 
 class DoctorsController extends Controller
 {
@@ -18,16 +20,19 @@ class DoctorsController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
+        $limit=$request->query('limit',20);
 
         $user=auth('sanctum')->user();
 
         $company=$user->company;
 
-        $doctors = Doctor::byCompany($company->id)->get();
+        $doctors = Doctor::byCompany($company->id)->orderByDesc("created_at")->paginate($limit);
 
-        return successResponse(data:DoctorResource::collection($doctors));
+        $doctors->withQueryString();
+
+        return successResponse(data:new DoctorsCollection($doctors));
     }
 
     /**

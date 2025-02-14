@@ -3,10 +3,12 @@
 namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\PatientRequest;
+use App\Http\Resources\Collection\PatientsCollection;
 use App\Http\Resources\PatientResource;
 use App\Http\Services\ImageService;
 use App\Http\Services\UserService;
 use App\Models\Patient;
+use Illuminate\Http\Request;
 
 class PatientsController extends Controller
 {
@@ -21,15 +23,20 @@ class PatientsController extends Controller
         $this->imageService = new ImageService();
     }
 
-    public function index()
+    public function index(Request $request)
     {
+
+        $limit=$request->query('limit',20);
+
         $user = auth('sanctum')->user();
 
         $company = $user->company;
 
-        $patients = Patient::byCompany($company->id)->get();
+        $patients = Patient::byCompany($company->id)->orderByDesc("created_at")->paginate($limit);
+        
+        $patients->withQueryString();
 
-        return successResponse(data: PatientResource::collection($patients));
+        return successResponse(data:new PatientsCollection($patients));
     }
 
     /**

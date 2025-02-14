@@ -40,7 +40,7 @@ class EmployeeRequest extends FormRequest
             },function(){
                 return "nullable";
             }),
-            "jop"=>"string|required",
+            "job"=>"string|required",
             "gender"=>"required|in:male,female",
             "salary"=>"required|numeric",
             "role"=>"required||in:admin,employee|string",
